@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-project1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-project1
+  template:
+    metadata:
+      labels:
+        app: go-project1
+    spec:
+      containers:
+      - name: go-project1-container
+        image: franciscocunha57/go_project1_repo:1.0
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
