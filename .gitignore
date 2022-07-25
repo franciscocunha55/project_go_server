@@ -3,3 +3,4 @@
 go.mod
 go.sum
 gitignore
+./frontend/node_modules

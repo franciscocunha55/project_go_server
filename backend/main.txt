@@ -1,0 +1,84 @@
+package main
+
+import (
+	"database/sql"
+	"fmt"
+	"log"
+	"net/http"
+
+	_ "github.com/lib/pq"
+)
+
+const (
+    host     = "localhost"
+    port     = 5432
+    user     = "user9"
+    password = "Mostarda989*"
+    dbname   = "project1"
+)
+
+var psqlConnection = fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname) 
+func CheckError(err error) {
+    if err != nil {
+        panic(err)
+    }
+}
+func getAll(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "<h1>Hello World </h1>")
+
+    db, err := sql.Open("postgres", psqlConnection)
+
+    rows, err := db.Query(`SELECT * FROM public.person`)
+
+    for rows.Next() {
+        var id int
+        var name string
+        var age int
+     
+        err = rows.Scan(&id, &name, &age)
+        CheckError(err)
+     
+        fmt.Fprintln(w,"<h1>ola</h1>" , id,name,age)
+    }
+    
+}
+
+
+func deleteId(w http.ResponseWriter, r *http.Request){
+    fmt.Fprintf(w, "delete")
+    db, err := sql.Open("postgres", psqlConnection)
+
+    CheckError(err)
+    
+    deleteStmt := `delete from public.person where id=$1`
+    _, e := db.Exec(deleteStmt, 1)
+    CheckError(e)
+
+}
+
+func main(){
+	fmt.Println("hello Alexandra")
+
+	// Connection DB 
+	psqlConnection := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+
+	// open database
+    db, err := sql.Open("postgres", psqlConnection)
+    CheckError(err)
+
+    defer db.Close()
+
+    // check db
+    err = db.Ping()
+    CheckError(err)
+
+    
+    fmt.Println("Connected!")
+
+    http.HandleFunc("/getAll", getAll)
+    http.HandleFunc("/delete", deleteId)
+    fmt.Println("Server starting...")
+	log.Fatal(http.ListenAndServe(":4000", nil))
+    
+
+}
