@@ -3,16 +3,18 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"project1/handlers"
 )
 
-func setupRoutes() {
-    http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-        fmt.Fprintf(w, "Simple Server")
-    })
-}
+const portNumber = ":4000"
+
+
+
 
 func main() {
-    setupRoutes()
-    fmt.Println("Server starting ...")
-    http.ListenAndServe(":4000", nil)
+    http.HandleFunc("/", handlers.Home)
+    http.HandleFunc("/about", handlers.AboutUs)
+
+    fmt.Printf("Server starting at port %v ...", portNumber)
+    http.ListenAndServe(portNumber, nil)
 }
