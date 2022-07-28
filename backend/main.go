@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"project1/handlers"
+	"project1/pkg/handlers"
 )
 
 const portNumber = ":4000"
